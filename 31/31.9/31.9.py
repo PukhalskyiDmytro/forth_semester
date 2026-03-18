@@ -4,11 +4,12 @@ import random
 
 N = 100
 m = 5
-t = 10
+t = 100
 t1 = 3
-iterations = 100
+iterations = 50
 
 q = queue.Queue()
+data = []
 results = []
 lock = threading.Lock()
 
@@ -26,27 +27,45 @@ def turnstile():
         with lock:
             results.append((arrival, finish))
 
+def analyze_data(data, t, parts):
+    step = t / parts
 
-arrivals = [random.uniform(-t, 0) for _ in range(N)]
-arrivals.sort()
+    result = [[0] * parts for _ in data]
 
-for a in arrivals:
-    q.put(a)
+    for row_i, row in enumerate(data):
+        for arrival_time, finish_time in row:
+            idx = int((arrival_time + t) / step)
 
-threads = []
-for _ in range(m):
-    th = threading.Thread(target=turnstile)
-    th.start()
-    threads.append(th)
+            if idx < 0:
+                idx = 0
+            if idx >= parts:
+                idx = parts - 1
 
-for th in threads:
-    th.join()
+            if finish_time < 0 and result[row_i][idx] == 0:
+                result[row_i][idx] = 1
 
-not_late = [(arrival, finish) for (arrival, finish) in results if finish <= 0.0]
+    return [sum(row[i] for row in result) / len(data) for i in range(parts)]
 
-if not_late:
-    last_not_late = max(not_late, key=lambda x: x[0])
-    arrival_time, finish_time = last_not_late
-    print("Last spectator, that was not late, arrived at:", f"{arrival_time:.3f}")
-else:
-    print("No spectator entered before the match (no one was not late).")
+def main():
+    for it in range(iterations):
+        arrivals = [random.uniform(-t, 0) for _ in range(N)]
+        arrivals.sort()
+
+        for a in arrivals:
+            q.put(a)
+
+        threads = []
+        for _ in range(m):
+            th = threading.Thread(target=turnstile)
+            th.start()
+            threads.append(th)
+
+        for th in threads:
+            th.join()
+
+        data.append(results.copy())
+        results.clear()
+    print(analyze_data(data, t, 20))
+
+if __name__ == "__main__":
+    main()
