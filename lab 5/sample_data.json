@@ -1,0 +1,46 @@
+[
+  {
+    "id": 1,
+    "name": "Ivan",
+    "age": 21,
+    "group": "MI-11",
+    "grades": [
+      90,
+      85,
+      100
+    ],
+    "address": {
+      "city": "Kyiv",
+      "street": "Shevchenka"
+    },
+    "active": true
+  },
+  {
+    "id": 2,
+    "name": "Olena",
+    "age": 19,
+    "group": "MI-12",
+    "grades": [
+      75,
+      80
+    ],
+    "address": {
+      "city": "Lviv"
+    },
+    "active": false
+  },
+  {
+    "id": 3,
+    "name": "Petro",
+    "age": 22,
+    "group": "MI-11",
+    "grades": [
+      100,
+      95
+    ],
+    "address": {
+      "city": "Kyiv"
+    },
+    "active": true
+  }
+]
