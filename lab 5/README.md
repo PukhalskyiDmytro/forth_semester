@@ -23,7 +23,7 @@
 
 ## Додатково реалізовано
 
-- сортування результатів;
+- сортування результатів пошуку;
 - складні умови `AND`, `OR`, `NOT`;
 - часткове оновлення вкладених полів;
 - індексація окремих полів;
@@ -49,13 +49,16 @@ python -m unittest -v test_json_document_db.py
 ```text
 add {"id":1,"name":"Ivan","age":21,"group":"MI-11","grades":[90,85,100],"address":{"city":"Kyiv","street":"Shevchenka"},"active":true}
 add {"id":2,"name":"Olena","age":19,"group":"MI-12","grades":[75,80],"address":{"city":"Lviv"},"active":false}
+add {"id":3,"name":"Petro","age":22,"group":"MI-11","grades":[100,95],"address":{"city":"Kyiv"},"active":true}
 
-find age > 20
 find active == true
+sort age desc
+
 find address.city == "Kyiv"
-find grades contains 100
+sort age
 
 exists address.street
+sort name
 
 update 1 address.city "Odesa"
 
@@ -66,14 +69,14 @@ aggregate max age
 
 groupby group
 
-sort age
-sort age desc
-
 index group
 save data.json
 load data.json
 history
 ```
+
+Команда `sort` сортує не всі документи колекції, а останні результати команд `find` або `exists`.
+Тому перед сортуванням потрібно виконати пошук.
 
 ## Приклад складної умови у коді
 
@@ -88,5 +91,5 @@ condition = {
     ]
 }
 
-result = collection.find(condition)
+result = collection.find(condition, sort_by="age")
 ```
